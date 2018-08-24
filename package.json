@@ -1,0 +1,16 @@
+{
+  "name": "electron-openvr",
+  "version": "0.1.0",
+  "description": "Electron translation layer for OpenVR",
+  "main": "index.js",
+  "repository": "https://github.com/kayteh/electron-openvr",
+  "author": "Katalina <git@kat.cafe>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "node-openvr": "file:../node-openvr"
+  },
+  "peerDependencies": {
+    "electron": "^3.0.0-beta.7"
+  }
+}
