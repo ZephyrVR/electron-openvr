@@ -24,9 +24,9 @@ class VRWindow extends BrowserWindow {
     this.__setupOverlay(vrOpts)
   }
 
-  __setupOverlay ({ key, name = 'Electron VR App', fps = 60 } = {}) {
-    this.__vrSystem = vr.system.VR_Init(vr.EVRApplicationType.VRApplication_Overlay)
-    this.__overlay = new VROverlay({ system: this.__vrSystem, key: `electronvr:${Date.now()}:${key}`, name: name })
+  __setupOverlay ({ key, name = 'Electron VR App', fps = 60, system = null }) {
+    this.__vrSystem = system || vr.system.VR_Init(vr.EVRApplicationType.VRApplication_Overlay)
+    this.overlay = new VROverlay({ system: this.__vrSystem, key: `electronvr:${Date.now()}:${key}`, name: name })
     this.webContents.setFrameRate(fps)
     
     this.webContents.on('paint', (...args) => {
@@ -35,8 +35,8 @@ class VRWindow extends BrowserWindow {
 
     this.webContents.on('dom-ready', () => {
       // setup overlay further
-      this.__overlay.transformTrackedDeviceRelative(0, { x: 0, y: 0, z: -1 })
-      this.__overlay.show()
+      // this.overlay.transformTrackedDeviceRelative(device, { x, y, z })
+      this.overlay.show()
 
       // initial force draw, this is usually empty but fuck it.
       this.__vrDraw()
@@ -51,12 +51,12 @@ class VRWindow extends BrowserWindow {
   __vrDraw (force = false) {
     this.webContents.capturePage((image) => {
       const buf = image.toBitmap()
-      
+
       if (buf.length === 0) {
         return
       }
       
-      this.__overlay.setTextureFromBuffer(buf, { ...image.getSize() })
+      this.overlay.setTextureFromBuffer(buf, { ...image.getSize() })
     })
   }
 }
